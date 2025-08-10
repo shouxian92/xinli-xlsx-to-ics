@@ -140,7 +140,8 @@ func isTimeHeader(rows []*xlsx.Row, rowIndex int) bool {
 func buildWeek(rows []*xlsx.Row, weekStartRow int) weekTimetable {
 	// the first column consists of all the time and the next 5 columns are days of the week
 	// each day of the week occupies 2 columns
-	loc, _ := time.LoadLocation("Asia/Singapore")
+	// Use UTC+8 (GMT+8) directly instead of loading Asia/Singapore timezone
+	loc := time.FixedZone("GMT+8", 8*60*60)
 
 	// Add safety check for date parsing
 	if len(rows[weekStartRow].Cells) < 2 {
@@ -154,16 +155,6 @@ func buildWeek(rows []*xlsx.Row, weekStartRow int) weekTimetable {
 
 	startDate, err := rows[weekStartRow].Cells[1].GetTime(false)
 	if err != nil {
-		// Return an empty week timetable with current time as fallback
-		return weekTimetable{
-			startDate: time.Now().In(loc),
-			endDate:   time.Now().In(loc).AddDate(0, 0, 5),
-			lessons:   [][]lesson{},
-		}
-	}
-
-	// Validate that we have a valid date before proceeding
-	if startDate.IsZero() {
 		// Return an empty week timetable with current time as fallback
 		return weekTimetable{
 			startDate: time.Now().In(loc),
@@ -217,7 +208,8 @@ func buildLessonTimeslot(rows []*xlsx.Row, weekStartRow, lessonStartRow, dayColu
 	code := strings.ReplaceAll(rows[lessonStartRow].Cells[dayColumn].Value, " ", "")
 	description := rows[lessonStartRow+1].Cells[dayColumn].Value
 
-	loc, _ := time.LoadLocation("Asia/Singapore")
+	// Use UTC+8 (GMT+8) directly instead of loading Asia/Singapore timezone
+	loc := time.FixedZone("GMT+8", 8*60*60)
 
 	// Add safety check for date parsing
 	if len(rows[weekStartRow].Cells) <= dayColumn {
@@ -226,11 +218,6 @@ func buildLessonTimeslot(rows []*xlsx.Row, weekStartRow, lessonStartRow, dayColu
 
 	startDate, err := rows[weekStartRow].Cells[dayColumn].GetTime(false)
 	if err != nil {
-		return lesson{}, lessonStartRow
-	}
-
-	// Validate that we have a valid date before proceeding
-	if startDate.IsZero() {
 		return lesson{}, lessonStartRow
 	}
 
