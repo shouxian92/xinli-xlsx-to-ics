@@ -162,6 +162,16 @@ func buildWeek(rows []*xlsx.Row, weekStartRow int) weekTimetable {
 		}
 	}
 
+	// Validate that we have a valid date before proceeding
+	if startDate.IsZero() {
+		// Return an empty week timetable with current time as fallback
+		return weekTimetable{
+			startDate: time.Now().In(loc),
+			endDate:   time.Now().In(loc).AddDate(0, 0, 5),
+			lessons:   [][]lesson{},
+		}
+	}
+
 	startDate = time.Date(startDate.Year(), startDate.Month(), startDate.Day(), startDate.Hour(), startDate.Minute(), startDate.Second(), startDate.Nanosecond(), loc)
 
 	weekTimetable := weekTimetable{
@@ -216,6 +226,11 @@ func buildLessonTimeslot(rows []*xlsx.Row, weekStartRow, lessonStartRow, dayColu
 
 	startDate, err := rows[weekStartRow].Cells[dayColumn].GetTime(false)
 	if err != nil {
+		return lesson{}, lessonStartRow
+	}
+
+	// Validate that we have a valid date before proceeding
+	if startDate.IsZero() {
 		return lesson{}, lessonStartRow
 	}
 
