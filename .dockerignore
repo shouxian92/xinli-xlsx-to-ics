@@ -1,0 +1,30 @@
+# Git files
+.git
+.gitignore
+
+# Documentation
+README.md
+SETUP.md
+*.md
+
+# Config examples
+config.env.example
+
+# Excel files (test data)
+*.xlsx
+
+# ICS files (output)
+*.ics
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+temp/
+tmp/
