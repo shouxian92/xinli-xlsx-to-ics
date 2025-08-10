@@ -7,6 +7,8 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
+const TABLE_ROW_SIZE int = 21
+
 // map the modules by module code
 func buildModules(rows []*xlsx.Row) (map[string]module, int) {
 	modules := map[string]module{}

@@ -14,8 +14,6 @@ import (
 	tele "gopkg.in/telebot.v3"
 )
 
-const TABLE_ROW_SIZE int = 21
-
 func main() {
 	// Get bot token from environment variable
 	token := os.Getenv("TELEGRAM_BOT_TOKEN")
